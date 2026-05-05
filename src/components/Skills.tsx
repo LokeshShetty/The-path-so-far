@@ -2,6 +2,7 @@ import { motion } from "framer-motion";
 import { Bot, Code2, Sparkles } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import SectionHeading from "./SectionHeading";
+import { useTheme } from "../lib/theme";
 
 interface SkillItem {
   name: string;
@@ -89,7 +90,32 @@ const rows: SkillRow[] = [
   },
 ];
 
+/** True for hex strings that read as "white-ish" — anything we'd
+ *  expect to disappear when rendered against a light background. */
+function isNearWhite(hex: string): boolean {
+  const m = hex.match(/^#?([0-9a-fA-F]{6})$/);
+  if (!m) return false;
+  const v = parseInt(m[1], 16);
+  const r = (v >> 16) & 0xff;
+  const g = (v >> 8) & 0xff;
+  const b = v & 0xff;
+  // Luminance > 240/255 = effectively white
+  return r > 240 && g > 240 && b > 240;
+}
+
 function Chip({ name, slug, color, Icon }: SkillItem) {
+  const { theme } = useTheme();
+
+  // Swap white-ish brand colours to a near-black in light mode so
+  // the icon stays visible against the light surface. Dark mode
+  // keeps the canonical brand colour.
+  const resolvedColor = (() => {
+    const fallback = theme === "light" ? "0A0A0F" : "FFFFFF";
+    if (!color) return fallback;
+    if (theme === "light" && isNearWhite(color)) return "0A0A0F";
+    return color;
+  })();
+
   return (
     <div
       data-cursor={name}
@@ -103,7 +129,7 @@ function Chip({ name, slug, color, Icon }: SkillItem) {
         />
       ) : slug ? (
         <img
-          src={`https://cdn.simpleicons.org/${slug}/${color ?? "FFFFFF"}`}
+          src={`https://cdn.simpleicons.org/${slug}/${resolvedColor}`}
           alt=""
           loading="lazy"
           className="h-5 w-5 transition-transform duration-300 group-hover:scale-110"
