@@ -1,114 +1,79 @@
-# Lokesh Shetty — Portfolio
+# The Path So Far — Lokesh Shetty's portfolio
 
-Stunning, animated developer portfolio. **Vite + React 18 + TypeScript**, with Framer Motion, React Three Fiber, GSAP + ScrollTrigger, Lenis smooth scroll, and Tailwind CSS v3.
+Live at **https://lokeshshetty.github.io/The-path-so-far/**
 
-[![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/LokeshShetty/portfolio)
+Built with **Vite + React 18 + TypeScript**, styled with Tailwind v3, animated with Framer Motion, GSAP + ScrollTrigger, Lenis smooth scroll, and React Three Fiber. Deployed to GitHub Pages via Actions.
 
 ---
 
 ## ✨ Stack
 
 - **Vite + React 18 + TypeScript**
-- **Tailwind CSS v3** (dark-mode-only, custom palette)
-- **Framer Motion** — UI animations, scroll reveals, character-split text
-- **React Three Fiber + drei** — 3D hero scene + animated avatar blob
-- **GSAP + ScrollTrigger** — scroll-driven entrance animations
-- **Lenis** — buttery smooth scrolling
-- **Lucide React** — icons
+- **Tailwind CSS v3** — themed via CSS variables (dark / light), custom palette
+- **Framer Motion** — UI animations, scroll-driven transforms, character-split text
+- **React Three Fiber + drei** — 3D hero scene
+- **GSAP + ScrollTrigger** — scroll-driven entrances
+- **Lenis** — smooth scrolling
 - **react-parallax-tilt** — 3D card tilt
-- **react-countup** — animated stats
+- **Lucide React** — icons
 
 ## 🚀 Quick start
 
 ```bash
 npm install
 npm run dev      # http://localhost:5173
-npm run build    # production build → ./dist
+npm run build    # production build → ./dist  (with the `/The-path-so-far/` base path)
 npm run preview  # preview the production build locally
 ```
 
-## 📦 Deploy to Netlify
+## 📦 Deploy — GitHub Pages
 
-This repo includes `netlify.toml` so deploys are zero-config:
+Pushes to `main` automatically rebuild and republish via **`.github/workflows/deploy.yml`**.
 
-```toml
-[build]
-  command = "npm run build"
-  publish = "dist"
+To set up a fresh fork:
 
-[[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 200
-```
+1. **Repo → Settings → Pages → Source: "GitHub Actions"** (not "Deploy from a branch").
+2. Push to `main`. The workflow runs `npm ci`, `npm run build`, and uploads `dist/` to Pages.
+3. The site lands at `https://<your-username>.github.io/<repo-name>/`.
 
-Either:
-- **Drag-and-drop** the `/dist` folder onto [app.netlify.com/drop](https://app.netlify.com/drop), or
-- **Connect the repo** in Netlify and let CI build it.
+If you rename the repo, update the `base` in **[vite.config.ts](vite.config.ts)** to match the new sub-path. For root hosting (e.g. a `<username>.github.io` repo), set `base: '/'`.
 
-## 🖼 Adding your own GIFs
+## 🖼 Featured Work — animations
 
-Drop your previews into `public/gifs/` with these exact filenames:
-
-```
-public/gifs/
-  chat-desktop.gif
-  agent-builder.gif
-  crm.gif
-  layout-service.gif
-  data-table.gif
-  auth-v2.gif
-```
-
-The cards in [src/components/Work.tsx](src/components/Work.tsx) reference each path. To add a new project, append to the `projects` array in that file:
-
-```ts
-{
-  title: "Your project",
-  description: "Two-line description.",
-  gif: "/gifs/your-project.gif",
-  tags: ["React", "Go", "..."],
-  meta: "Category · Service",
-}
-```
-
-> Tip: keep GIFs under ~3 MB. For sharper, lighter previews use `.webm` / `.mp4` and replace the `<img>` in `Work.tsx` with a muted `<video>`.
+Each card in [src/components/Work.tsx](src/components/Work.tsx) is paired with a bespoke animated SVG illustration from [src/components/ui/WorkArt.tsx](src/components/ui/WorkArt.tsx). Variants: `desktop`, `dag`, `schema`, `layout`, `table`, `auth`, `billing`, `extension`, `survey`, `kyara`. To plug in a real GIF / WebM, drop the file at `public/gifs/<name>.gif` and reference it via the `gif` field on the project — the component falls back to the SVG art if the asset is missing.
 
 ## 📄 Resume
 
-Drop your PDF at `public/resume.pdf`. It's already wired up to:
+The PDF at `public/resume.pdf` is wired up to:
 
 - The hero **Download Resume** button
 - The nav **Resume** pill
-- The **Resume** section iframe (`/resume.pdf#view=FitH`)
-- The **Download Resume (PDF)** CTA below the iframe
 
-## ✏️ Where to swap placeholder text
+There's no on-page resume section — the **Experience** timeline + **Skills** carousel cover the same ground. Replace `public/resume.pdf` whenever you re-export.
+
+## ✏️ Where to swap text
 
 | What | File | Search for |
 | --- | --- | --- |
 | Hero subtitle | `src/components/Hero.tsx` | `"Full-stack Developer building"` |
-| About paragraphs | `src/components/About.tsx` | `"I'm a Full-stack Developer"` |
-| Stats (3 / 15+ / 4 / 1) | `src/components/About.tsx` | `const stats =` |
-| Project list | `src/components/Work.tsx` | `const projects:` |
+| About paragraphs / stats | `src/components/About.tsx` | `const stats =` |
+| Featured work projects | `src/components/Work.tsx` | `const projects:` |
+| Experience pin bullets | `src/components/Timeline.tsx` | `const PIN_HEAD` / `const PIN_TAIL` |
 | Skills marquees | `src/components/Skills.tsx` | `const rows:` |
-| Experience timeline | `src/components/Timeline.tsx` | `const jobs:` |
-| Contact details | `src/components/Contact.tsx` | `const cards =` |
-| Phone / location | `src/components/Contact.tsx` | `+91 81477 77707` |
+| Contact cards | `src/components/Contact.tsx` | `const cards =` |
 | Page meta / OG | `index.html` | `<meta property="og:` |
 
 ## 🎨 Design tokens
 
-Edit `tailwind.config.js` to tweak the palette. Defaults:
+Themed via CSS custom properties in [src/index.css](src/index.css). Switching between dark / light is handled by [src/lib/theme.tsx](src/lib/theme.tsx) using the View Transitions API for the circular reveal effect on toggle.
 
-| Token | Value |
+| Token | Value (dark) |
 | --- | --- |
 | Background | `#0A0A0F` |
 | Primary gradient | `linear-gradient(135deg, #6366F1, #A855F7, #EC4899)` |
 | Accent purple | `#A855F7` |
 | Text primary | `#F5F5F7` |
 | Text muted | `#9CA3AF` |
-| Glass | `rgba(168,85,247,0.08)` + `backdrop-blur(20px)` |
 
 ## 🧩 Project structure
 
@@ -116,39 +81,39 @@ Edit `tailwind.config.js` to tweak the palette. Defaults:
 src/
   components/
     Hero.tsx          HeroScene.tsx
-    About.tsx         AvatarBlob.tsx
-    Work.tsx
+    About.tsx         BuildPipeline.tsx
+    Work.tsx          (carousel of flippable project cards)
     Skills.tsx
-    Timeline.tsx
-    ResumeEmbed.tsx
+    Timeline.tsx      (cinematic path-driven experience section)
     Contact.tsx
     Nav.tsx           SectionHeading.tsx
     ui/
+      WorkArt.tsx     (animated SVG illustrations per project)
       MagneticButton.tsx
       GlassCard.tsx
       CustomCursor.tsx
-      AuroraBackground.tsx
-      GrainOverlay.tsx
-      Spotlight.tsx
-      SplitText.tsx
+      AuroraBackground.tsx · GrainOverlay.tsx · DotGrid.tsx
+      CosmicField.tsx (starfield + shooting stars on Contact)
+      Spotlight.tsx · ScanLine.tsx · OrbitRings.tsx
+      ScrollToTop.tsx (rocket launch / land animation)
+      SplitText.tsx · MarqueeStrip.tsx
+      ThemeToggle.tsx · HeroStatusBar.tsx · CodeFloater.tsx
   hooks/
-    useScrollReveal.ts
-    useMagnetic.ts
-    useLenis.ts
+    useScrollReveal.ts · useMagnetic.ts · useLenis.ts
+    useInViewFrameloop.ts
   lib/
-    motion.ts
+    motion.ts · theme.tsx
   App.tsx · main.tsx · index.css
 public/
-  resume.pdf
-  favicon.svg
-  gifs/
+  resume.pdf · favicon.svg
+  gifs/   (optional — fallback to SVG art if missing)
 ```
 
 ## ♿️ Accessibility
 
-- Respects `prefers-reduced-motion` — disables Lenis, magnetic effects, custom cursor, and most animations.
+- Respects `prefers-reduced-motion` — disables Lenis, magnetic effects, custom cursor, the cosmic backdrop, and most animations.
 - Custom cursor only activates on `(hover: hover) and (pointer: fine)` devices.
-- All interactive elements remain keyboard-focusable.
+- All interactive elements stay keyboard-focusable; carousel arrows / pause button / progress segments are real `<button>` elements.
 
 ## 📝 License
 
