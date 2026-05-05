@@ -60,6 +60,18 @@ const rows: SkillRow[] = [
       { name: "Sentry", slug: "sentry", color: "362D59" },
     ],
   },
+  {
+    category: "AI & Editors",
+    items: [
+      { name: "Claude Code", slug: "claude", color: "D97757" },
+      { name: "Cursor", slug: "cursor", color: "FFFFFF" },
+      { name: "GitHub Copilot", slug: "githubcopilot", color: "FFFFFF" },
+      { name: "VS Code", slug: "visualstudiocode", color: "007ACC" },
+      { name: "ChatGPT", slug: "openai", color: "FFFFFF" },
+      { name: "Postman", slug: "postman", color: "FF6C37" },
+      { name: "Figma", slug: "figma", color: "F24E1E" },
+    ],
+  },
 ];
 
 function Chip({ name, slug, color }: { name: string; slug: string; color?: string }) {
