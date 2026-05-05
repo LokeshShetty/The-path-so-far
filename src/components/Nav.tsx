@@ -77,7 +77,7 @@ export default function Nav() {
           </div>
 
           <a
-            href="/resume.pdf"
+            href={`${import.meta.env.BASE_URL}resume.pdf`}
             target="_blank"
             rel="noreferrer"
             download
@@ -142,7 +142,7 @@ export default function Nav() {
                 ))}
               </div>
               <a
-                href="/resume.pdf"
+                href={`${import.meta.env.BASE_URL}resume.pdf`}
                 target="_blank"
                 rel="noreferrer"
                 download
