@@ -1,9 +1,19 @@
 import { motion } from "framer-motion";
+import { Bot, Code2, Sparkles } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 import SectionHeading from "./SectionHeading";
+
+interface SkillItem {
+  name: string;
+  slug?: string;
+  color?: string;
+  /** Falls back to a Lucide icon for brands missing from simple-icons. */
+  Icon?: LucideIcon;
+}
 
 interface SkillRow {
   category: string;
-  items: { name: string; slug: string; color?: string }[];
+  items: SkillItem[];
   reverse?: boolean;
 }
 
@@ -66,30 +76,53 @@ const rows: SkillRow[] = [
       { name: "Claude Code", slug: "claude", color: "D97757" },
       { name: "Cursor", slug: "cursor", color: "FFFFFF" },
       { name: "GitHub Copilot", slug: "githubcopilot", color: "FFFFFF" },
-      { name: "VS Code", slug: "visualstudiocode", color: "007ACC" },
-      { name: "ChatGPT", slug: "openai", color: "FFFFFF" },
+      // VS Code was removed from simple-icons (Microsoft brand
+      // policy), so we fall back to a Lucide editor glyph.
+      { name: "VS Code", Icon: Code2 },
+      // ChatGPT — Lucide bot glyph keeps the sizing consistent
+      // with the OpenAI brand mark when it doesn't render.
+      { name: "ChatGPT", Icon: Bot },
+      { name: "Anthropic", slug: "anthropic", color: "D97757" },
       { name: "Postman", slug: "postman", color: "FF6C37" },
       { name: "Figma", slug: "figma", color: "F24E1E" },
     ],
   },
 ];
 
-function Chip({ name, slug, color }: { name: string; slug: string; color?: string }) {
-  const url = `https://cdn.simpleicons.org/${slug}/${color ?? "FFFFFF"}`;
+function Chip({ name, slug, color, Icon }: SkillItem) {
   return (
     <div
       data-cursor={name}
       className="group flex items-center gap-3 rounded-2xl glass px-5 py-3 transition-all duration-300 hover:border-[#A855F7]/60 hover:shadow-[0_0_30px_-8px_rgba(168,85,247,0.7)]"
     >
-      <img
-        src={url}
-        alt=""
-        loading="lazy"
-        className="h-5 w-5 transition-transform duration-300 group-hover:scale-110"
-        onError={(e) => {
-          (e.currentTarget as HTMLImageElement).style.display = "none";
-        }}
-      />
+      {Icon ? (
+        <Icon
+          className="h-5 w-5 text-fg/85 transition-transform duration-300 group-hover:scale-110"
+          strokeWidth={2}
+          aria-hidden
+        />
+      ) : slug ? (
+        <img
+          src={`https://cdn.simpleicons.org/${slug}/${color ?? "FFFFFF"}`}
+          alt=""
+          loading="lazy"
+          className="h-5 w-5 transition-transform duration-300 group-hover:scale-110"
+          onError={(e) => {
+            // simple-icons CDN sometimes returns 404 for brands the
+            // package has dropped — show a generic glyph instead of
+            // collapsing the chip to a bare label.
+            const img = e.currentTarget as HTMLImageElement;
+            img.outerHTML = `
+              <span class="ls-fallback-icon flex h-5 w-5 items-center justify-center rounded-md bg-fg/10 text-fg/70 text-[10px]">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" class="h-3.5 w-3.5">
+                  <path d="m18 16 4-4-4-4" /><path d="m6 8-4 4 4 4" /><path d="m14.5 4-5 16" />
+                </svg>
+              </span>`;
+          }}
+        />
+      ) : (
+        <Sparkles className="h-5 w-5 text-fg/85" aria-hidden />
+      )}
       <span className="text-sm font-medium text-fg/85 whitespace-nowrap">
         {name}
       </span>
